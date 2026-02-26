@@ -97,6 +97,10 @@ if ($vnp_ResponseCode == '00') {
                     ':txn_id' => $vnp_TransactionNo
                 ]);
 
+                // Cập nhật số dư ví trong session
+                $_SESSION['wallet_balance'] = $_SESSION['wallet_balance'] ?? 0;
+                $_SESSION['wallet_balance'] += $amount;
+
                 $_SESSION['success'] = 'Nạp tiền thành công! Số tiền: ' . number_format($amount, 0, ',', '.') . 'đ';
                 
                 // Gửi thông báo nạp tiền thành công
