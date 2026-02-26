@@ -130,7 +130,7 @@ if ($vnp_ResponseCode == '00') {
     ];
 
     $errorMsg = $errorMessages[$vnp_ResponseCode] ?? 'Giao dịch không thành công';
-    $_SESSION['errors'] = ['vnpay' => $errorMsg];
+    $_SESSION['errors'] = ['vnpay' => $errorMsg . ' (Mã lỗi: ' . $vnp_ResponseCode . ')'];
     
     // Parse transaction reference để redirect đúng trang
     $parts = explode('_', $vnp_TxnRef);
