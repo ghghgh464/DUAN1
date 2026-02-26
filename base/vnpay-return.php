@@ -15,7 +15,7 @@ $vnp_BankCode = $_GET['vnp_BankCode'] ?? '';
 $isValid = verifyVNPayCallback($_GET);
 
 if (!$isValid) {
-    $_SESSION['errors'] = ['vnpay' => 'Chữ ký không hợp lệ'];
+    $_SESSION['errors'] = ['vnpay' => 'Chữ ký không hợp lệ. Vui lòng liên hệ hỗ trợ.'];
     header('Location: ' . BASE_URL);
     exit;
 }
@@ -53,6 +53,16 @@ if ($vnp_ResponseCode == '00') {
                     ]);
 
                     $_SESSION['success'] = 'Thanh toán đơn hàng thành công! Đơn hàng đang được xử lý. Mã giao dịch: ' . $vnp_TransactionNo;
+                    
+                    // Gửi thông báo cho người dùng
+                    if (isset($_SESSION['user']['id'])) {
+                        $stmt = $pdo->prepare("INSERT INTO notifications (user_id, title, message, type) VALUES (:user_id, :title, :message, 'order')");
+                        $stmt->execute([
+                            ':user_id' => $_SESSION['user']['id'],
+                            ':title' => 'Thanh toán thành công',
+                            ':message' => 'Đơn hàng #' . $id . ' đã được thanh toán thành công qua VNPay'
+                        ]);
+                    }
                 } else {
                     $_SESSION['success'] = 'Đơn hàng đã được thanh toán trước đó';
                 }
@@ -85,6 +95,14 @@ if ($vnp_ResponseCode == '00') {
                 ]);
 
                 $_SESSION['success'] = 'Nạp tiền thành công! Số tiền: ' . number_format($amount, 0, ',', '.') . 'đ';
+                
+                // Gửi thông báo nạp tiền thành công
+                $stmt = $pdo->prepare("INSERT INTO notifications (user_id, title, message, type) VALUES (:user_id, :title, :message, 'wallet')");
+                $stmt->execute([
+                    ':user_id' => $userId,
+                    ':title' => 'Nạp tiền thành công',
+                    ':message' => 'Bạn đã nạp ' . number_format($amount, 0, ',', '.') . 'đ vào ví thành công'
+                ]);
             }
 
             header('Location: ' . BASE_URL . '?action=wallet');

@@ -199,7 +199,7 @@ style: Update product card design
 
 - Group Chat: [Link]
 - Email: [Email]
-- GitHub: [Repository URL]
+- GitHub: https://github.com/namtrung12/DUAN12
 
 ## 📄 License
 
