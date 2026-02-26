@@ -51,6 +51,9 @@ if ($vnp_ResponseCode == '00') {
                         ':txn_id' => $vnp_TransactionNo,
                         ':id' => $id
                     ]);
+                    
+                    // Ghi log giao dịch thành công
+                    error_log("VNPay payment success - Order ID: {$id}, Transaction: {$vnp_TransactionNo}, Amount: {$vnp_Amount}");
 
                     $_SESSION['success'] = 'Thanh toán đơn hàng thành công! Đơn hàng đang được xử lý. Mã giao dịch: ' . $vnp_TransactionNo;
                     
